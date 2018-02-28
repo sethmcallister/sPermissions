@@ -1,0 +1,9 @@
+name: Permissions
+main: xyz.sethy.permssions.Main
+author: [Garispl, Seth McAllister]
+version: 1.0-SNAPSHOT
+commands:
+  setrank:
+  reloadgroups:
+  addpermission:
+    aliases: [addperm, grantperm, grantpermission]
