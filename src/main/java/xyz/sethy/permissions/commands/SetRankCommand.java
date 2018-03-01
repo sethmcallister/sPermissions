@@ -36,7 +36,7 @@ public class SetRankCommand implements CommandExecutor {
             return true;
         }
 
-        permissionsUser.getGroup().set(group.getName());
+        permissionsUser.getGroup().lazySet(group.getName());
         sender.sendMessage(ChatColor.YELLOW + "You have set " + ChatColor.GREEN + target.getName() + ChatColor.YELLOW + "'s rank to '" + ChatColor.GREEN + group.getName() + ChatColor.YELLOW + "'.");
         if (target.isOnline()) {
             Player targetPlayer = (Player) target;
