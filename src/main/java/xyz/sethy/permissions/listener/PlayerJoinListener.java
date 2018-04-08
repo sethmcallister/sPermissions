@@ -1,11 +1,11 @@
 package xyz.sethy.permissions.listener;
 
-import xyz.sethy.permissions.Main;
-import xyz.sethy.permissions.dto.PermissionsUser;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.sethy.permissions.Main;
+import xyz.sethy.permissions.dto.PermissionsUser;
 
 public class PlayerJoinListener implements Listener {
     @EventHandler
@@ -17,6 +17,7 @@ public class PlayerJoinListener implements Listener {
                 if (permissionsUser == null) {
                     permissionsUser = new PermissionsUser(event.getPlayer().getUniqueId());
                     Main.getInstance().getPermissionsUserHandler().findAll().add(permissionsUser);
+                    permissionsUser.getNeedsUpdating().lazySet(true);
                 }
 
                 Main.getInstance().applyPermissions(event.getPlayer(), permissionsUser);

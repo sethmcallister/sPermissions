@@ -1,13 +1,13 @@
 package xyz.sethy.permissions.commands;
 
-import xyz.sethy.permissions.Main;
-import xyz.sethy.permissions.dto.PermissionsUser;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import xyz.sethy.permissions.Main;
+import xyz.sethy.permissions.dto.PermissionsUser;
 
 public class PermissionsInfoCommand implements CommandExecutor {
     @Override

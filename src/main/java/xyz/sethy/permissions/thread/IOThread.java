@@ -36,7 +36,7 @@ public class IOThread extends Thread {
             }
         }
 
-        try (FileWriter writer  = new FileWriter(file)) {
+        try (FileWriter writer = new FileWriter(file)) {
             writer.write(this.gson.toJson(permissionsUser));
         } catch (IOException e) {
             e.printStackTrace();

@@ -5,6 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.plugin.java.JavaPlugin;
 import xyz.sethy.permissions.commands.*;
 import xyz.sethy.permissions.dto.Group;
 import xyz.sethy.permissions.dto.PermissionsUser;
@@ -12,11 +17,6 @@ import xyz.sethy.permissions.expection.NoDefaultGroupExpection;
 import xyz.sethy.permissions.handler.PermissionsUserHandler;
 import xyz.sethy.permissions.listener.AsyncPlayerChatListener;
 import xyz.sethy.permissions.listener.PlayerJoinListener;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.plugin.java.JavaPlugin;
 import xyz.sethy.permissions.thread.IOThread;
 
 import java.io.File;
@@ -55,8 +55,52 @@ public class Main extends JavaPlugin {
         this.groups = new ArrayList<>();
         this.permissionsUserHandler = new PermissionsUserHandler();
         this.scheduledExecutorService = Executors.newScheduledThreadPool(1);
+        loadGroups();
+    }
 
-        Bukkit.getLogger().info("Loading groups...");
+    @Override
+    public void onEnable() {
+        if (this.findDefaultGroup() == null) {
+            try {
+                throw new NoDefaultGroupExpection();
+            } catch (NoDefaultGroupExpection NoDefaultGroupExpection) {
+                NoDefaultGroupExpection.printStackTrace();
+            }
+        }
+
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new AsyncPlayerChatListener(), this);
+        getCommand("setrank").setExecutor(new SetRankCommand());
+        getCommand("reloadgroups").setExecutor(new ReloadGroupsCommand());
+        getCommand("addpermission").setExecutor(new AddPermissionCommand());
+        getCommand("removepermission").setExecutor(new RemovePermissionCommand());
+        getCommand("permissionsinfo").setExecutor(new PermissionsInfoCommand());
+        getCommand("addsubgroup").setExecutor(new AddSubGroupCommand());
+        getCommand("removesubgroup").setExecutor(new RemoveSubGroupCommand());
+
+        this.scheduledExecutorService.scheduleAtFixedRate(new IOThread(), 5, 5, TimeUnit.MINUTES);
+    }
+
+    @Override
+    public void onDisable() {
+        String json = this.gson.toJson(this.groups);
+
+        File file = new File(this.fileName);
+        if (!file.exists())
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadGroups() {
         File file = new File(this.fileName);
         if (!file.exists()) {
             getDataFolder().mkdir();
@@ -86,49 +130,6 @@ public class Main extends JavaPlugin {
         }
     }
 
-    @Override
-    public void onEnable() {
-        if (this.findDefaultGroup() == null) {
-            try {
-                throw new NoDefaultGroupExpection();
-            } catch (NoDefaultGroupExpection NoDefaultGroupExpection) {
-                NoDefaultGroupExpection.printStackTrace();
-            }
-        }
-
-        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
-        Bukkit.getPluginManager().registerEvents(new AsyncPlayerChatListener(), this);
-        getCommand("setrank").setExecutor(new SetRankCommand());
-        getCommand("reloadgroups").setExecutor(new ReloadGroupsCommand());
-        getCommand("addpermission").setExecutor(new AddPermissionCommand());
-        getCommand("removepermission").setExecutor(new RemovePermissionCommand());
-        getCommand("permissionsinfo").setExecutor(new PermissionsInfoCommand());
-        getCommand("addsubgroup").setExecutor(new AddSubGroupCommand());
-        getCommand("removepermission").setExecutor(new RemovePermissionCommand());
-        getCommand("removesubgroup").setExecutor(new RemoveSubGroupCommand());
-
-        this.scheduledExecutorService.scheduleAtFixedRate(new IOThread(), 5, 5, TimeUnit.MINUTES);
-    }
-
-    @Override
-    public void onDisable() {
-        String json = this.gson.toJson(this.groups);
-
-        File file = new File(this.fileName);
-        if (!file.exists())
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        try (FileWriter writer = new FileWriter(file)) {
-            writer.write(json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public Group findByName(final String name) {
         return this.groups.stream().filter(group -> group.getName().equalsIgnoreCase(name)).findFirst().orElse(this.findDefaultGroup());
     }
@@ -143,6 +144,7 @@ public class Main extends JavaPlugin {
         if (permissionsUser == null) {
             permissionsUser = getPermissionsUserHandler().findByUniqueId(player.getUniqueId());
         }
+
         Group group = this.findByName(permissionsUser.getGroup().get());
         if (group == null)
             group = this.findDefaultGroup();

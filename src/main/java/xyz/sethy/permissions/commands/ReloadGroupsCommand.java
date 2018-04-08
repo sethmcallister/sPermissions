@@ -1,11 +1,11 @@
 package xyz.sethy.permissions.commands;
 
-import xyz.sethy.permissions.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import xyz.sethy.permissions.Main;
 
 public class ReloadGroupsCommand implements CommandExecutor {
 
@@ -15,7 +15,7 @@ public class ReloadGroupsCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You do not have permission to execute this command.");
             return true;
         }
-        Main.getInstance().onLoad();
+        Main.getInstance().loadGroups();
         sender.sendMessage(ChatColor.YELLOW + "You have successfully reloaded the groups.");
         Bukkit.getOnlinePlayers().forEach(player -> Main.getInstance().applyPermissions(player, null));
         return true;

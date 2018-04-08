@@ -1,5 +1,5 @@
 name: Permissions
-main: xyz.sethy.permssions.Main
+main: xyz.sethy.permissions.Main
 author: [Garispl, Seth McAllister]
 version: 1.0-SNAPSHOT
 commands:
@@ -7,3 +7,7 @@ commands:
   reloadgroups:
   addpermission:
     aliases: [addperm, grantperm, grantpermission]
+  removepermission:
+  permissionsinfo:
+  addsubgroup:
+  removesubgroup:
