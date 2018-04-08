@@ -14,12 +14,12 @@ public class AddPermissionCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (!sender.hasPermission("permissions.addpermissions")) {
+        if (!sender.hasPermission("permissions.addpermission")) {
             sender.sendMessage(ChatColor.RED + "You do not have permission to execute this command.");
             return true;
         }
         if (args.length != 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: /addpermissions <player> <permission>");
+            sender.sendMessage(ChatColor.RED + "Usage: /addpermission <player> <permission>");
             return true;
         }
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);

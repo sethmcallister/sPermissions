@@ -15,7 +15,7 @@ public class AddSubGroupCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (!sender.hasPermission("permissions.setrank")) {
+        if (!sender.hasPermission("permissions.addsubgroup")) {
             sender.sendMessage(ChatColor.RED + "You do not have permission to execute this command.");
             return true;
         }
