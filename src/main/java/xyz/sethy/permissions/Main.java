@@ -83,6 +83,9 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
+
+        permissionsUserHandler.findAll().stream().filter(user -> user.getNeedsUpdating().get()).forEach(PermissionsUser::save);
+
         String json = this.gson.toJson(this.groups);
 
         File file = new File(this.fileName);
