@@ -1,6 +1,6 @@
 name: Permissions
 main: xyz.sethy.permissions.Main
-author: [Garispl, Seth McAllister]
+authors: [Garispl, Seth McAllister]
 version: 1.0-SNAPSHOT
 commands:
   setrank:

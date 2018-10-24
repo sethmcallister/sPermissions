@@ -52,6 +52,9 @@ public class Main extends JavaPlugin {
         setInstance(this);
         this.gson = new GsonBuilder().setPrettyPrinting().create();
         this.fileName = getDataFolder() + File.separator + "groups.json";
+
+        File usersFolder = new File(getDataFolder() + File.separator + "users");
+        usersFolder.mkdir();
         this.groups = new ArrayList<>();
         this.permissionsUserHandler = new PermissionsUserHandler();
         this.scheduledExecutorService = Executors.newScheduledThreadPool(1);
@@ -70,6 +73,7 @@ public class Main extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new AsyncPlayerChatListener(), this);
+
         getCommand("setrank").setExecutor(new SetRankCommand());
         getCommand("reloadgroups").setExecutor(new ReloadGroupsCommand());
         getCommand("addpermission").setExecutor(new AddPermissionCommand());
